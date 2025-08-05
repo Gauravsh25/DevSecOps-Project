@@ -23,7 +23,7 @@ spec:
    
          
       containers:
-        - name: mlmts
+        - name: netflix-app
           image: gauravsharma25861/netflix:latest
           imagePullPolicy: Always
           resources:
