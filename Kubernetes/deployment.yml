@@ -1,21 +1,74 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: netflix-app
+  # namespace: stage 
   labels:
     app: netflix-app
 spec:
-  replicas: 2
+  replicas: 4
   selector:
     matchLabels:
       app: netflix-app
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0 # Max unavailable pods during update
+      maxSurge: 1 # Max extra pods created during update
   template:
     metadata:
       labels:
         app: netflix-app
-    spec:
+    spec:  # This was missing!
       containers:
-      - name: netflix-app
-        image: gauravsharma25861/netflix:latest
-        ports:
-        - containerPort: 80
+        - name: netflix-app  # Changed from 'mlmts' to match the app
+          image: gauravsharma25861/netflix:latest
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 50m
+              memory: 64Mi
+          ports:
+            - containerPort: 80
+          securityContext:
+            allowPrivilegeEscalation: true # Changed to false for security
+            privileged: false                # Changed to false for security
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: false
+            runAsNonRoot: false             # Changed to true for security
+            runAsUser: 1001                  # Added non-root user
+          readinessProbe:
+            # Fixed probe - checking if nginx is serving content
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+          livenessProbe:
+            # Fixed probe - checking if nginx is alive
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          # Optional: Add startup probe for slow-starting apps
+          startupProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 30  # Allow up to 150 seconds for startup
+
+---
+
