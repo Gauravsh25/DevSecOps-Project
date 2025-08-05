@@ -36,7 +36,7 @@ spec:
             - containerPort: 80
           securityContext:
             allowPrivilegeEscalation: true # Changed to false for security
-            privileged: false                # Changed to false for security
+            privileged: true              # Changed to false for security
             capabilities:
               drop:
                 - ALL
