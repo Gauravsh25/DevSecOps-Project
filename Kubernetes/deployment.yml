@@ -23,7 +23,7 @@ spec:
     spec:  # This was missing!
       containers:
         - name: netflix-app  # Changed from 'mlmts' to match the app
-          image: gauravsharma25861/myapp
+          image: lovelearnlinux/webserver:v2
           imagePullPolicy: Always
           resources:
             limits:
