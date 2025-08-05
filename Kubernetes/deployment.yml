@@ -42,7 +42,7 @@ spec:
                 - ALL
             readOnlyRootFilesystem: false
             runAsNonRoot: false             # Changed to true for security
-            runAsUser: 1001                  # Added non-root user
+            #runAsUser: 1001                  # Added non-root user
           readinessProbe:
             # Fixed probe - checking if nginx is serving content
             httpGet:
