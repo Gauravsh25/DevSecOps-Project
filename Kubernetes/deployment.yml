@@ -1,66 +1,21 @@
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: netflix-app
-    #namespace: stage 
   labels:
     app: netflix-app
 spec:
-  replicas: 4
+  replicas: 2
   selector:
     matchLabels:
       app: netflix-app
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 0 # Max unavailable pods during update
-      maxSurge: 1 # Max extra pods created during update
   template:
     metadata:
       labels:
         app: netflix-app
-   
-         
+    spec:
       containers:
-        - name: netflix-app
-          image: gauravsharma25861/netflix:latest
-          imagePullPolicy: Always
-          resources:
-            limits:
-              cpu: 100m # TODO: Set this to the maximum amount of CPU you want your workload to use
-              memory: 128Mi # TODO: Set this to the maximum amount of memory you want your workload to use
-            requests:
-              cpu: 50m # TODO: Set this to the amount of CPU you want to reserve for your workload
-              memory: 64Mi # TODO: Set this to the amount of Memory you want to reserve for your workload
-          ports:
-            - containerPort: 80
-          securityContext:
-            allowPrivilegeEscalation: true
-            privileged: true
-            capabilities:
-              drop:
-                - ALL
-            readOnlyRootFilesystem: false
-            runAsNonRoot: false
-          readinessProbe:
-            # TODO: Change the readinessProbe setting to reflect your application's readiness to serve traffic
-            exec:
-              command:
-                - cat
-                - /usr/share/nginx/html
-            initialDelaySeconds: 5
-            periodSeconds: 5
-          livenessProbe:
-            # TODO: Change the livenessProbe setting to reflect your application's health
-            exec:
-              command:
-                - cat
-                - /usr/share/nginx/html
-            initialDelaySeconds: 5
-            periodSeconds: 5
-              # priorityClassName: high-priority
-            
----
-
-
+      - name: netflix-app
+        image: nasi101/netflix:latest
+        ports:
+        - containerPort: 80
